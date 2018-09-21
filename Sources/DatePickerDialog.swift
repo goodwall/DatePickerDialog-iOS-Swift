@@ -24,7 +24,7 @@ open class DatePickerDialog: UIView {
 
     // MARK: - Variables
     private var defaultDate: Date?
-    private var datePickerMode: UIDatePickerMode?
+    private var datePickerMode: UIDatePicker.Mode?
     private var callback: DatePickerCallback?
     var showCancelButton: Bool = false
     var locale: Locale?
@@ -86,7 +86,7 @@ open class DatePickerDialog: UIView {
                    cancelButtonTitle: String = "Cancel",
                    defaultDate: Date = Date(),
                    minimumDate: Date? = nil, maximumDate: Date? = nil,
-                   datePickerMode: UIDatePickerMode = .dateAndTime,
+                   datePickerMode: UIDatePicker.Mode = .dateAndTime,
                    callback: @escaping DatePickerCallback) {
         self.titleLabel.text = title
         self.doneButton.setTitle(doneButtonTitle, for: .normal)
@@ -96,7 +96,7 @@ open class DatePickerDialog: UIView {
         self.datePickerMode = datePickerMode
         self.callback = callback
         self.defaultDate = defaultDate
-        self.datePicker.datePickerMode = self.datePickerMode ?? UIDatePickerMode.date
+        self.datePicker.datePickerMode = self.datePickerMode ?? UIDatePicker.Mode.date
         self.datePicker.date = self.defaultDate ?? Date()
         self.datePicker.maximumDate = maximumDate
         self.datePicker.minimumDate = minimumDate
@@ -107,12 +107,12 @@ open class DatePickerDialog: UIView {
         guard let appDelegate = UIApplication.shared.delegate else { fatalError() }
         guard let window = appDelegate.window else { fatalError() }
         window?.addSubview(self)
-        window?.bringSubview(toFront: self)
+        window?.bringSubviewToFront(self)
         window?.endEditing(true)
 
         NotificationCenter.default.addObserver(self,
                                                selector: .deviceOrientationDidChange,
-                                               name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+                                               name: UIDevice.orientationDidChangeNotification, object: nil)
 
         /* Anim */
         UIView.animate(
@@ -166,9 +166,9 @@ open class DatePickerDialog: UIView {
 
         // This is the dialog's container; we attach the custom content and the buttons to this one
         let container = UIView(frame: CGRect(x: (screenSize.width - dialogSize.width) / 2,
-                                                   y: (screenSize.height - dialogSize.height) / 2,
-                                                   width: dialogSize.width,
-                                                   height: dialogSize.height))
+                                             y: (screenSize.height - dialogSize.height) / 2,
+                                             width: dialogSize.width,
+                                             height: dialogSize.height))
 
         // First, we style the dialog to match the iOS8 UIAlertView >>>
         let gradient: CAGradientLayer = CAGradientLayer(layer: self.layer)
@@ -189,7 +189,7 @@ open class DatePickerDialog: UIView {
         container.layer.shadowOffset = CGSize(width: 0 - (cornerRadius + 5) / 2, height: 0 - (cornerRadius + 5) / 2)
         container.layer.shadowColor = UIColor.black.cgColor
         container.layer.shadowPath = UIBezierPath(roundedRect: container.bounds,
-                                                        cornerRadius: container.layer.cornerRadius).cgPath
+                                                  cornerRadius: container.layer.cornerRadius).cgPath
 
         // There is a line above the button
         let yPosition = container.bounds.size.height - kDefaultButtonHeight - kDefaultButtonSpacerHeight
