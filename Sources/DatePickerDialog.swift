@@ -218,6 +218,11 @@ open class DatePickerDialog: UIView {
 
     fileprivate func configuredDatePicker() -> UIDatePicker {
         let datePicker = UIDatePicker(frame: CGRect(x: 0, y: 30, width: 0, height: 0))
+         if #available(iOS 13.4, *) {
+            datePicker.preferredDatePickerStyle = .wheels
+        } else {
+            // Fallback on earlier versions
+        }
         datePicker.setValue(self.textColor, forKeyPath: "textColor")
         datePicker.autoresizingMask = .flexibleRightMargin
         datePicker.frame.size.width = 300
